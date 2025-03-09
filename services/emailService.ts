@@ -9,7 +9,7 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
     },
   });
 
-  const resetUrl = `http://localhost:3000/reset-password?token=${token}`;
+  const resetUrl = `https://intern-guide-7fvgyddys-noriyukiiiis-projects.vercel.app/reset-password?token=${token}`;
 
   const mailOptions = {
     from: `"MyApp" <no-reply@myapp.com>`,
