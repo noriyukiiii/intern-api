@@ -1,0 +1,225 @@
+datasource db {
+  provider = "postgresql"
+  // url      = "postgresql://postgres:1234@localhost:5432/test_company"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum Status {
+  No_Intern
+  Interning
+  InternSuccess
+}
+
+enum approvalStatus {
+  pending
+  approved
+  rejected
+}
+
+model User {
+  id                   String    @id @default(cuid())
+  email                String    @unique
+  firstName            String
+  lastName             String
+  phone                String
+  studentId            String
+  emailVerified        Boolean   @default(false)
+  verificationToken    String?   @unique
+  resetPasswordToken   String? // เพิ่มฟิลด์นี้
+  resetPasswordExpires DateTime? // ใช้ตรวจสอบเวลาหมดอายุของ Token
+  image                String    @default("/userimage/chef.png")
+  password             String?
+  status               Status    @default(No_Intern)
+  role                 Role      @default(MEMBER)
+  sessions             Session[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  companyCreators        CompanyCreator[]
+  companyStudentInterned Company_Student_Interned[]
+  FavoriteCompanies      FavoriteCompanies[]
+  banners                Banner[] // ความสัมพันธ์กับตาราง Banner
+  newsBanners            NewsBanner[] // ความสัมพันธ์กับตาราง NewsBanner
+  Comment                Comment[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Company {
+  id                  String  @id @default(cuid())
+  companyNameTh       String
+  companyNameEn       String
+  description         String?
+  otherDescription    String?
+  location            String?
+  province            String?
+  contractName        String?
+  contractTel         String?
+  contractEmail       String?
+  contractSocial      String?
+  contractSocial_line String?
+  establishment       String?
+  website             String?
+  benefit             String?
+  occupation          String?
+  imgLink             String?
+  isMou               Boolean
+  approvalStatus      String  @default("pending") // เพิ่มสถานะการอนุมัติ
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  positions              positions[]
+  comments               Comment[] // ความสัมพันธ์กับตาราง Comment
+  companyCreators        CompanyCreator[]
+  companyStudentInterned Company_Student_Interned[]
+  FavoriteCompanies      FavoriteCompanies[]
+}
+
+model CompanyCreator {
+  id        String @id @default(cuid())
+  userId    String // คนเพิ่มบริษัท
+  companyId String // บริษัทที่ถูกเพิ่ม
+
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade) // 💥 ลบ Company จะลบ CompanyCreator ด้วย
+
+  @@unique([userId, companyId]) // ห้าม user เดิมเพิ่มบริษัทเดิมซ้ำ
+}
+
+model Company_Student_Interned {
+  id           String         @id @default(cuid())
+  companyId    String
+  userId       String?
+  student_name String?
+  status       approvalStatus @default(pending)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model positions {
+  id        String    @id @unique @default(cuid())
+  name      String
+  companyId String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  company              Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  position_description position_description[]
+}
+
+model position_description {
+  id          String    @id @default(cuid())
+  positionId  String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  positions   positions @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  skills      skills[]
+}
+
+model skills {
+  id         String    @id @default(cuid())
+  name       String    @default("undefined")
+  pos_des_id String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  position_description position_description @relation(fields: [pos_des_id], references: [id], onDelete: Cascade)
+  tools                tools[]
+}
+
+model tools {
+  id        String    @id @default(cuid())
+  name      String // เช่น "Framework", "Library", "Tool"
+  skillId   String // Foreign key to skills
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  skill skills @relation(fields: [skillId], references: [id], onDelete: Cascade)
+}
+
+model FavoriteCompanies {
+  id        String   @id @default(cuid())
+  userId    String
+  companyId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  title     String
+  image     String
+  order     Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model NewsBanner {
+  id        String   @id @default(cuid())
+  title     String
+  image     String
+  linkUrl   String
+  order     Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  userId    String
+  companyId String
+  content   String // เนื้อหาของความคิดเห็น
+  createdAt DateTime  @default(now()) // วันที่และเวลาที่สร้างความคิดเห็น
+  updatedAt DateTime  @updatedAt // วันที่และเวลาที่อัปเดตความคิดเห็น
+  deletedAt DateTime? // วันที่และเวลาที่ลบความคิดเห็น (ถ้าต้องการ)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
