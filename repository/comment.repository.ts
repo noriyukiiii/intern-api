@@ -36,6 +36,17 @@ class CommentRepository {
     });
     return true;
   }
+  async updateComment(commentId: any, comment: string) {
+    await db.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        content: comment,
+      },
+    });
+    return true;
+  }
 }
 
 export const commentRepository = new CommentRepository();

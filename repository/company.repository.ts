@@ -1,3 +1,4 @@
+import { approvalStatus } from "@prisma/client";
 import { db } from "../lib/prisma";
 
 class CompanyRepository {
@@ -116,6 +117,28 @@ class CompanyRepository {
     } catch (error) {
       console.error("Error fetching company details:", error);
       return null;
+    }
+  }
+  async getFavoritebyUserId(
+    userId: string,
+    companyId: string
+  ): Promise<{ isFavorite: boolean }> {
+    try {
+      console.log("Checking favorite status for:", { userId, companyId });
+
+      const favorite = await db.favoriteCompanies.findFirst({
+        where: {
+          userId: userId,
+          companyId: companyId,
+        },
+      });
+
+      console.log("Query result:", favorite);
+
+      return { isFavorite: favorite ? true : false };
+    } catch (error) {
+      console.error("Error fetching favorite status:", error);
+      return { isFavorite: false };
     }
   }
   async getChartData({
@@ -384,11 +407,32 @@ class CompanyRepository {
         });
       }
 
+      const companyName = await db.company.findUnique({
+        where: {
+          id: companyId,
+        },
+      });
+
+      if (!companyName) {
+        throw new Error("ไม่พบบริษัทที่ต้องการสร้างคำร้อง");
+      }
+
+      const appeal = await db.companyAppeal.create({
+        data: {
+          companyId: companyName.id, // ใช้ค่า id จาก companyName ที่หาได้
+          companyName: companyName.companyNameTh, // ใช้ companyNameTh ของบริษัท
+          status: "pending", // กำหนดสถานะเริ่มต้นเป็น pending
+          content: "ยกเลิกการเลือกบริษัท", // เนื้อหาของการอุทธรณ์
+          userId: userId, // ใช้ userId ที่ได้จาก request
+        },
+      });
+
       const checkstatus = await db.favoriteCompanies.findMany({
         where: {
           userId: userId,
         },
       });
+
       if (checkstatus.length === 0) {
         const updateStatus = await db.user.update({
           where: { id: userId },
@@ -461,6 +505,20 @@ class CompanyRepository {
           },
         },
       });
+
+      // เช็คสถานะของ approvalStatus ว่าเป็น "pending"
+      if (company.approvalStatus === "pending") {
+        await db.companyAppeal.create({
+          data: {
+            companyId: company.id, // ใช้ company.id ที่สร้างได้มา
+            companyName: data.companyNameTh,
+            status: "pending", // ให้สถานะเป็น pending
+            content: "สร้างบริษัทใหม่", // ข้อความเนื้อหาของการอุทธรณ์
+            userId: data.userId, // ใช้ userId ตรง ๆ เพื่อเชื่อมโยงกับ user
+          },
+        });
+      }
+
       return company;
     } catch (error) {
       console.error("Error creating company:", error);
@@ -470,11 +528,23 @@ class CompanyRepository {
 
   async deleteCompany(companyId: string) {
     try {
+      // อัพเดท companyId ใน companyAppeal ให้เป็น null
+      await db.companyAppeal.updateMany({
+        where: {
+          companyId: companyId,
+        },
+        data: {
+          companyId: null, // set companyId เป็น null
+        },
+      });
+
+      // ลบ Company
       const company = await db.company.delete({
         where: {
           id: companyId,
         },
       });
+
       return company;
     } catch (error) {
       console.error("Error deleting company:", error);

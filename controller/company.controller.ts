@@ -64,6 +64,20 @@ class CompanyController {
       return;
     }
   }
+  async getFavoriteCompanyByUserId(req: Request, res: Response) {
+    try {
+      const { userId, companyId } = req.query;
+      const company = await companyRepository.getFavoritebyUserId(
+        userId as string,
+        companyId as string
+      );
+      res.json(company);
+      return;
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+  }
   async getCompanyByUserId(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -90,12 +104,10 @@ class CompanyController {
     try {
       const { userId, companyId } = req.body;
       if (!userId || !companyId) {
-        res
-          .status(400)
-          .json({
-            success: false,
-            message: "userId and companyId are required",
-          });
+        res.status(400).json({
+          success: false,
+          message: "userId and companyId are required",
+        });
         return;
       }
       const company = await companyRepository.cancelCompany(userId, companyId);

@@ -1,3 +1,4 @@
+import { approvalStatus } from "@prisma/client";
 import { db } from "../lib/prisma";
 
 class AdminRepository {
@@ -65,18 +66,105 @@ class AdminRepository {
 
   async approveCompany(companyId: string) {
     try {
+      // อัปเดตสถานะของบริษัทเป็น 'approved'
       const company = await db.company.update({
         where: { id: companyId },
         data: { approvalStatus: "approved" },
       });
+
+      // ค้นหาผู้ที่เกี่ยวข้องกับบริษัทนี้ (ผู้ที่สร้างบริษัท)
+      const companyCreator = await db.companyCreator.findFirst({
+        where: { companyId: companyId },
+        select: {
+          userId: true, // ดึงแค่ userId จาก companyCreators
+        },
+      });
+
+      if (!companyCreator) {
+        throw new Error("CompanyCreator not found for this company");
+      }
+
+      const userId = companyCreator.userId; // ดึง userId จาก companyCreator
+
+      // ค้นหา CompanyAppeal โดยใช้ companyId และ userId
+      const companyAppeal = await db.companyAppeal.findFirst({
+        where: {
+          companyId: companyId,
+          userId: userId,
+        },
+      });
+
+      if (!companyAppeal) {
+        throw new Error("CompanyAppeal not found for this company and user");
+      }
+
+      // อัปเดตสถานะของ CompanyAppeal เป็น 'approved'
+      const approvedCompanyAppeal = await db.companyAppeal.update({
+        where: {
+          id: companyAppeal.id, // ใช้ id ในการอัปเดต
+        },
+        data: {
+          status: "approved", // เปลี่ยนสถานะการอุทธรณ์เป็น 'approved'
+        },
+      });
+
+      return approvedCompanyAppeal; // ส่งกลับข้อมูลของ CompanyAppeal ที่ได้รับการอัปเดต
     } catch (error: any) {
       console.error("Error approving company:", error);
       throw new Error("Unable to approve company");
     }
   }
+
   async rejectCompany(companyId: string) {
     try {
-      const company = await db.company.delete({
+      // ค้นหาข้อมูลก่อนการลบ
+      const company = await db.company.findUnique({
+        where: { id: companyId },
+      });
+
+      if (!company) {
+        throw new Error("Company not found");
+      }
+
+      // ค้นหาผู้ที่เกี่ยวข้องกับบริษัทนี้ (ผู้ที่สร้างบริษัท)
+      const companyCreator = await db.companyCreator.findFirst({
+        where: { companyId: companyId },
+        select: {
+          userId: true, // ดึงแค่ userId จาก companyCreators
+        },
+      });
+
+      if (!companyCreator) {
+        throw new Error("CompanyCreator not found for this company");
+      }
+
+      const userId = companyCreator.userId; // ดึง userId จาก companyCreator
+
+      // ค้นหา CompanyAppeal โดยใช้ companyId และ userId
+      const companyAppeal = await db.companyAppeal.findFirst({
+        where: {
+          companyId: companyId,
+          userId: userId,
+        },
+      });
+
+      if (!companyAppeal) {
+        throw new Error("CompanyAppeal not found for this company and user");
+      }
+
+      // อัปเดตสถานะของ CompanyAppeal เป็น 'rejected' และเปลี่ยน companyId ให้เป็น null
+      const rejectedCompanyAppeal = await db.companyAppeal.update({
+        where: {
+          id: companyAppeal.id, // ใช้ id ในการอัปเดต
+        },
+        data: {
+          status: "rejected", // เปลี่ยนสถานะการอุทธรณ์เป็น 'rejected'
+          companyId: { set: null }, // ทำให้ companyId เป็น null
+        },
+      });
+
+      // ลบบริษัท
+      await db.company.delete({
         where: { id: companyId },
       });
     } catch (error: any) {

@@ -52,6 +52,7 @@ model User {
   banners                Banner[] // ความสัมพันธ์กับตาราง Banner
   newsBanners            NewsBanner[] // ความสัมพันธ์กับตาราง NewsBanner
   Comment                Comment[]
+  CompanyAppeal          CompanyAppeal[]
 }
 
 model Session {
@@ -99,6 +100,7 @@ model Company {
   companyCreators        CompanyCreator[]
   companyStudentInterned Company_Student_Interned[]
   FavoriteCompanies      FavoriteCompanies[]
+  CompanyAppeal          CompanyAppeal[]
 }
 
 model CompanyCreator {
@@ -108,10 +110,25 @@ model CompanyCreator {
 
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id])
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade) // 💥 ลบ Company จะลบ CompanyCreator ด้วย
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@unique([userId, companyId]) // ห้าม user เดิมเพิ่มบริษัทเดิมซ้ำ
+}
+
+model CompanyAppeal {
+  id          String         @id @default(cuid())
+  companyId   String?        // companyId ต้องเป็น nullable
+  companyName String
+  userId      String
+  content     String
+  status      approvalStatus @default(pending)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
+
+  company     Company?       @relation(fields: [companyId], references: [id], onDelete: NoAction) // ทำให้ company เป็น nullable
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Company_Student_Interned {

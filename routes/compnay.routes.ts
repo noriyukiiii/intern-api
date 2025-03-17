@@ -5,13 +5,18 @@ const router = Router();
 
 router.get("/", companyController.getCompany);
 
+router.get("/getCompanyFavoite", companyController.getFavoriteCompanyByUserId);
+
 router.get("/get_chart", companyController.getChartData);
 
 router.get("/:id", companyController.getCompanyDetail);
 
 router.get("/getFavoriteCompany/:id", companyController.getCompanyByUserId);
 
-router.get("/getInternedCompany/:id", companyController.getInternedCompanyByUserId);
+router.get(
+  "/getInternedCompany/:id",
+  companyController.getInternedCompanyByUserId
+);
 
 router.patch("/cancelCompany", companyController.cancelCompany);
 

@@ -104,7 +104,7 @@ class NewsBannerController {
     }
   }
   async updateBanner(req: Request, res: Response) {
-    const { id, title, image, isActive, userId } = req.body;
+    const { id, title, image, isActive, userId, linkUrl } = req.body;
     try {
       if (!id) {
         res.status(400).json({ message: "Banner ID is required" });
@@ -114,6 +114,7 @@ class NewsBannerController {
         id,
         title,
         image,
+        linkUrl,
         isActive,
         userId,
       });

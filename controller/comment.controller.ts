@@ -71,6 +71,35 @@ class CommentController {
       return;
     }
   }
+  async updateComment(req: Request, res: Response) {
+    try {
+      const { commentId, comment } = req.body;
+
+      // ตรวจสอบว่ามีข้อมูลที่จำเป็นหรือไม่
+      if (!commentId || !comment) {
+        res.status(400).json({
+          success: false,
+          message: "ไม่มีข้อมูลที่จำเป็น",
+        });
+        return;
+      }
+
+      // อัพเดทคอมเมนต์
+      await commentRepository.updateComment(commentId, comment);
+
+      res.status(200).json({
+        success: true,
+        message: "Comment updated successfully",
+      });
+      return;
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+      return;
+    }
+  }
 }
 
 export const commentController = new CommentController();

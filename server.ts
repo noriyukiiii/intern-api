@@ -10,6 +10,7 @@ import authRoute from "./routes/auth.routes";
 import companycreaterRoute from "./routes/companycreater.routes";
 import adminRoute from "./routes/admin.routes";
 import commentRoute from "./routes/comment.routes";
+import appealRoute from "./routes/appeal.routes";
 const app = express();
 const prisma = new PrismaClient();
 
@@ -37,7 +38,9 @@ app.use("/compCreater", companycreaterRoute);
 
 app.use("/admin", adminRoute);
 
-app.use("/comment", commentRoute)
+app.use("/comment", commentRoute);
+
+app.use("/appeal", appealRoute);
 
 app.get("/companyoption", async (req, res) => {
   try {
@@ -110,8 +113,6 @@ app.get("/companyoption", async (req, res) => {
   }
 });
 
-
-
 app.get("/get-favorite", async (req: Request, res: Response): Promise<void> => {
   const { userId, companyId } = req.query;
 
@@ -166,14 +167,10 @@ app.post(
           where: { id: userId },
           data: { status: "InternSuccess" },
         });
-        res.json({
-          success: true,
-          message: "User status set to InternSuccess",
-        });
-        return; // ไม่ทำการเพิ่มหรือลบรายการโปรด
+        // ทำการเพิ่มหรือลบรายการโปรดได้
       }
 
-      // ถ้าไม่มีข้อมูลใน Company_Student_Interned
+      // ถ้าไม่มีข้อมูลใน Company_Student_Interned หรือสถานะยังไม่ใช่ 'InternSuccess'
       if (isSelected) {
         // ตรวจสอบว่ามีข้อมูลในรายการโปรดหรือไม่
         const existingFavorite = await prisma.favoriteCompanies.findFirst({
@@ -248,7 +245,7 @@ process.on("SIGINT", async () => {
   process.exit(0);
 });
 
-const PORT = 5555;
+const PORT = 5556;
 
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
