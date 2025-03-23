@@ -46,10 +46,12 @@ class AdminRepository {
       positionCountByType: formattedPositionCountByType,
 
       // จำนวนตำแหน่งฝึกงานที่มีอยู่
-      totalPositions: await db.positions.count(),
+      totalPositions: await db.company_Student_Interned.count({
+        where: { status: "pending" },
+      }),
 
-      interning: await db.user.count({
-        where: { status: "Interning" },
+      interning: await db.companyRequest.count({
+        where: { status: "pending" },
       }),
 
       // จำนวนผู้ที่ฝึกงานสำเร็จ
