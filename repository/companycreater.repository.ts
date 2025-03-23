@@ -96,6 +96,7 @@ class CompanyCreaterRepository {
         where: {
           companyId: compId,
           userId: userId,
+          content : "ยกเลิกการเลือกบริษัท"
         },
         orderBy: {
           createdAt: "desc", // จัดเรียงจากวันที่ล่าสุด

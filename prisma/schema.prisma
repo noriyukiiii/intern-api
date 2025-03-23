@@ -1,7 +1,7 @@
 datasource db {
   provider = "postgresql"
-  // url      = "postgresql://postgres:1234@localhost:5432/test_company"
   url      = env("DATABASE_URL")
+  // url =   "postgresql://database_owner:postgres@localhost:5432/intern_guide_database"
 }
 
 generator client {
@@ -32,6 +32,10 @@ model User {
   lastName             String
   phone                String
   studentId            String
+  occupation           String?
+  benefit              Boolean?
+  province             String?
+  position             String?
   emailVerified        Boolean   @default(false)
   verificationToken    String?   @unique
   resetPasswordToken   String? // เพิ่มฟิลด์นี้
@@ -53,6 +57,7 @@ model User {
   newsBanners            NewsBanner[] // ความสัมพันธ์กับตาราง NewsBanner
   Comment                Comment[]
   CompanyAppeal          CompanyAppeal[]
+  CompanyRequest         CompanyRequest[]
 }
 
 model Session {
@@ -101,6 +106,20 @@ model Company {
   companyStudentInterned Company_Student_Interned[]
   FavoriteCompanies      FavoriteCompanies[]
   CompanyAppeal          CompanyAppeal[]
+  CompanyRequest         CompanyRequest[]
+}
+
+model CompanyRequest {
+  id          String         @id @default(cuid())
+  companyId   String
+  userId      String
+  status      approvalStatus @default(pending)
+  requestData Json // เก็บข้อมูล JSON จากคำขอ
+
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CompanyCreator {
@@ -110,15 +129,15 @@ model CompanyCreator {
 
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // 💥 ลบ User จะลบ CompanyCreator ด้วย
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade) // 💥 ลบ Company จะลบ CompanyCreator ด้วย
 
   @@unique([userId, companyId]) // ห้าม user เดิมเพิ่มบริษัทเดิมซ้ำ
 }
 
 model CompanyAppeal {
   id          String         @id @default(cuid())
-  companyId   String?        // companyId ต้องเป็น nullable
+  companyId   String? // companyId ต้องเป็น nullable
   companyName String
   userId      String
   content     String
@@ -127,8 +146,8 @@ model CompanyAppeal {
   updatedAt   DateTime       @updatedAt
   deletedAt   DateTime?
 
-  company     Company?       @relation(fields: [companyId], references: [id], onDelete: NoAction) // ทำให้ company เป็น nullable
-  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company? @relation(fields: [companyId], references: [id], onDelete: NoAction) // ทำให้ company เป็น nullable
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Company_Student_Interned {

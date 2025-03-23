@@ -1,0 +1,316 @@
+[
+  {
+      "id": "cm8fw03l70001qfx0tvb0kamp",
+      "companyId": "cm58dro6f002lqfmctnraak04",
+      "userId": "cm6jg3e9c0000qfp8gnpad9mg",
+      "status": "pending",
+      "requestData": {
+          "id": "cm58dro6f002lqfmctnraak04",
+          "isMou": true,
+          "benefit": "- เบี้ยเลี้ยง\n- อาหารกลางวัน\n- fitness",
+          "imgLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ47B_nfBX9Mn3EpUMrz-FikoBvW-KqfpILg&s",
+          "website": "https://www.rvconnex.com/en/home",
+          "location": "30/1 หมู่ที่ 1 ถนนพหลโยธิน ตำบลคลองหนึ่ง อำเภอคลองหลวง จ.ปทุมธานี 12120",
+          "province": "ปทุมธานี",
+          "positions": [
+              {
+                  "id": "cm5f0ea6v006pqfek6gt9cqd4",
+                  "name": "อื่นๆ",
+                  "position_description": [
+                      {
+                          "id": "cm5f1yypz007xqf948e0euqph",
+                          "skills": [
+                              {
+                                  "id": "cm5f2xpv20097qfdgypdphzl9",
+                                  "name": "Unknown",
+                                  "tools": [
+                                      {
+                                          "id": "cm5f3yx2000a1qfpk86d6dkmt",
+                                          "name": "Unknown"
+                                      }
+                                  ]
+                              }
+                          ],
+                          "description": "Cyber Security"
+                      }
+                  ]
+              },
+              {
+                  "id": "cm5f0ea6v006rqfekxujpymac",
+                  "name": "IT Support",
+                  "position_description": [
+                      {
+                          "id": "cm5f1yyq1007zqf94ftbgz3r1",
+                          "skills": [
+                              {
+                                  "id": "cm5f2xpv20099qfdgtspcmq18",
+                                  "name": "Unknown",
+                                  "tools": [
+                                      {
+                                          "id": "cm5f3yx2000a3qfpkht5m20l0",
+                                          "name": "Unknown"
+                                      }
+                                  ]
+                              }
+                          ],
+                          "description": "IT Support"
+                      }
+                  ]
+              },
+              {
+                  "id": "cm5f0ea6v006tqfeklsqj2r1a",
+                  "name": "Developer",
+                  "position_description": [
+                      {
+                          "id": "cm5f1yyq20081qf94g9xh8nfb",
+                          "skills": [
+                              {
+                                  "id": "cm5f2xpv2009bqfdg1thf2zkj",
+                                  "name": "Unknown",
+                                  "tools": [
+                                      {
+                                          "id": "cm5f3yx2000a5qfpkfea374pw",
+                                          "name": "Unknown"
+                                      }
+                                  ]
+                              }
+                          ],
+                          "description": "Web Development"
+                      }
+                  ]
+              },
+              {
+                  "id": "cm5f0ea6v006vqfek4pdx8osh",
+                  "name": "Software Tester",
+                  "position_description": [
+                      {
+                          "id": "cm5f1yyq50083qf941xahu6ho",
+                          "skills": [
+                              {
+                                  "id": "cm5f2xpv2009dqfdgyevk8h7w",
+                                  "name": "Unknown",
+                                  "tools": [
+                                      {
+                                          "id": "cm5f3yx2000a7qfpkbknhsp5v",
+                                          "name": "Unknown"
+                                      }
+                                  ]
+                              }
+                          ],
+                          "description": "Tester"
+                      }
+                  ]
+              }
+          ],
+          "occupation": "both",
+          "contractTel": "02-090-9510 ต่อ 2201",
+          "description": "การผลิตอากาศยานยานอวกาศและเครื่องจักรที่เกี่ยวข้อง",
+          "contractName": "ผู้จัดการฝ่ายบุคคล",
+          "companyNameEn": "R V CONNEX COMPANY LIMITED",
+          "companyNameTh": "บริษัท อาร์ วี คอนเน็กซ์ จำกัด",
+          "contractEmail": "admin.hr@rvconnex.com",
+          "establishment": "เอกชน",
+          "contractSocial": "https://www.facebook.com/RVConnexOfficial",
+          "contractSocial_line": ""
+      },
+      "createdAt": "2025-03-19T12:16:53.803Z",
+      "updatedAt": "2025-03-19T12:16:53.803Z",
+      "company": {
+          "id": "cm58dro6f002lqfmctnraak04",
+          "companyNameTh": "บริษัท อาร์ วี คอนเน็กซ์ จำกัด",
+          "companyNameEn": "R V CONNEX COMPANY LIMITED",
+          "description": "การผลิตอากาศยานยานอวกาศและเครื่องจักรที่เกี่ยวข้อง",
+          "otherDescription": "VS Code",
+          "location": "30/1 หมู่ที่ 1 ถนนพหลโยธิน ตำบลคลองหนึ่ง อำเภอคลองหลวง จ.ปทุมธานี 12120",
+          "province": "ปทุมธานี",
+          "contractName": "ผู้จัดการฝ่ายบุคคล",
+          "contractTel": "02-090-9510 ต่อ 2201",
+          "contractEmail": "admin.hr@rvconnex.com",
+          "contractSocial": "https://www.facebook.com/RVConnexOfficial",
+          "contractSocial_line": "",
+          "establishment": "เอกชน",
+          "website": "https://www.rvconnex.com/en/home",
+          "benefit": "- เบี้ยเลี้ยง\n- อาหารกลางวัน\n- fitness",
+          "occupation": "both",
+          "imgLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ47B_nfBX9Mn3EpUMrz-FikoBvW-KqfpILg&s",
+          "isMou": true,
+          "approvalStatus": "approved",
+          "createdAt": "2024-12-28T16:12:57.248Z",
+          "updatedAt": "2024-12-28T16:12:57.248Z",
+          "deletedAt": null,
+          "positions": [
+              {
+                  "id": "cm5f0ea6v006pqfek6gt9cqd4",
+                  "name": "อื่นๆ",
+                  "companyId": "cm58dro6f002lqfmctnraak04",
+                  "createdAt": "2025-01-02T07:33:00.818Z",
+                  "updatedAt": "2025-01-02T07:33:00.818Z",
+                  "deletedAt": null,
+                  "position_description": [
+                      {
+                          "id": "cm5f1yypz007xqf948e0euqph",
+                          "positionId": "cm5f0ea6v006pqfek6gt9cqd4",
+                          "description": "Cyber Security",
+                          "createdAt": "2025-01-02T08:17:05.351Z",
+                          "updatedAt": "2025-01-02T08:17:05.351Z",
+                          "deletedAt": null,
+                          "skills": [
+                              {
+                                  "id": "cm5f2xpv20097qfdgypdphzl9",
+                                  "name": "Unknown",
+                                  "pos_des_id": "cm5f1yypz007xqf948e0euqph",
+                                  "createdAt": "2025-01-02T08:44:06.823Z",
+                                  "updatedAt": "2025-01-02T08:44:06.823Z",
+                                  "deletedAt": null,
+                                  "tools": [
+                                      {
+                                          "id": "cm5f3yx2000a1qfpk86d6dkmt",
+                                          "name": "Unknown",
+                                          "skillId": "cm5f2xpv20097qfdgypdphzl9",
+                                          "createdAt": "2025-01-02T09:13:02.417Z",
+                                          "updatedAt": "2025-01-02T09:13:02.417Z",
+                                          "deletedAt": null
+                                      }
+                                  ]
+                              }
+                          ]
+                      }
+                  ]
+              },
+              {
+                  "id": "cm5f0ea6v006rqfekxujpymac",
+                  "name": "IT Support",
+                  "companyId": "cm58dro6f002lqfmctnraak04",
+                  "createdAt": "2025-01-02T07:33:00.818Z",
+                  "updatedAt": "2025-01-02T07:33:00.818Z",
+                  "deletedAt": null,
+                  "position_description": [
+                      {
+                          "id": "cm5f1yyq1007zqf94ftbgz3r1",
+                          "positionId": "cm5f0ea6v006rqfekxujpymac",
+                          "description": "IT Support",
+                          "createdAt": "2025-01-02T08:17:05.353Z",
+                          "updatedAt": "2025-01-02T08:17:05.353Z",
+                          "deletedAt": null,
+                          "skills": [
+                              {
+                                  "id": "cm5f2xpv20099qfdgtspcmq18",
+                                  "name": "Unknown",
+                                  "pos_des_id": "cm5f1yyq1007zqf94ftbgz3r1",
+                                  "createdAt": "2025-01-02T08:44:06.823Z",
+                                  "updatedAt": "2025-01-02T08:44:06.823Z",
+                                  "deletedAt": null,
+                                  "tools": [
+                                      {
+                                          "id": "cm5f3yx2000a3qfpkht5m20l0",
+                                          "name": "Unknown",
+                                          "skillId": "cm5f2xpv20099qfdgtspcmq18",
+                                          "createdAt": "2025-01-02T09:13:02.417Z",
+                                          "updatedAt": "2025-01-02T09:13:02.417Z",
+                                          "deletedAt": null
+                                      }
+                                  ]
+                              }
+                          ]
+                      }
+                  ]
+              },
+              {
+                  "id": "cm5f0ea6v006tqfeklsqj2r1a",
+                  "name": "Developer",
+                  "companyId": "cm58dro6f002lqfmctnraak04",
+                  "createdAt": "2025-01-02T07:33:00.818Z",
+                  "updatedAt": "2025-01-02T07:33:00.818Z",
+                  "deletedAt": null,
+                  "position_description": [
+                      {
+                          "id": "cm5f1yyq20081qf94g9xh8nfb",
+                          "positionId": "cm5f0ea6v006tqfeklsqj2r1a",
+                          "description": "Web Development",
+                          "createdAt": "2025-01-02T08:17:05.355Z",
+                          "updatedAt": "2025-01-02T08:17:05.355Z",
+                          "deletedAt": null,
+                          "skills": [
+                              {
+                                  "id": "cm5f2xpv2009bqfdg1thf2zkj",
+                                  "name": "Unknown",
+                                  "pos_des_id": "cm5f1yyq20081qf94g9xh8nfb",
+                                  "createdAt": "2025-01-02T08:44:06.823Z",
+                                  "updatedAt": "2025-01-02T08:44:06.823Z",
+                                  "deletedAt": null,
+                                  "tools": [
+                                      {
+                                          "id": "cm5f3yx2000a5qfpkfea374pw",
+                                          "name": "Unknown",
+                                          "skillId": "cm5f2xpv2009bqfdg1thf2zkj",
+                                          "createdAt": "2025-01-02T09:13:02.417Z",
+                                          "updatedAt": "2025-01-02T09:13:02.417Z",
+                                          "deletedAt": null
+                                      }
+                                  ]
+                              }
+                          ]
+                      }
+                  ]
+              },
+              {
+                  "id": "cm5f0ea6v006vqfek4pdx8osh",
+                  "name": "Software Tester",
+                  "companyId": "cm58dro6f002lqfmctnraak04",
+                  "createdAt": "2025-01-02T07:33:00.818Z",
+                  "updatedAt": "2025-01-02T07:33:00.818Z",
+                  "deletedAt": null,
+                  "position_description": [
+                      {
+                          "id": "cm5f1yyq50083qf941xahu6ho",
+                          "positionId": "cm5f0ea6v006vqfek4pdx8osh",
+                          "description": "Tester",
+                          "createdAt": "2025-01-02T08:17:05.357Z",
+                          "updatedAt": "2025-01-02T08:17:05.357Z",
+                          "deletedAt": null,
+                          "skills": [
+                              {
+                                  "id": "cm5f2xpv2009dqfdgyevk8h7w",
+                                  "name": "Unknown",
+                                  "pos_des_id": "cm5f1yyq50083qf941xahu6ho",
+                                  "createdAt": "2025-01-02T08:44:06.823Z",
+                                  "updatedAt": "2025-01-02T08:44:06.823Z",
+                                  "deletedAt": null,
+                                  "tools": [
+                                      {
+                                          "id": "cm5f3yx2000a7qfpkbknhsp5v",
+                                          "name": "Unknown",
+                                          "skillId": "cm5f2xpv2009dqfdgyevk8h7w",
+                                          "createdAt": "2025-01-02T09:13:02.417Z",
+                                          "updatedAt": "2025-01-02T09:13:02.417Z",
+                                          "deletedAt": null
+                                      }
+                                  ]
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ]
+      },
+      "user": {
+          "id": "cm6jg3e9c0000qfp8gnpad9mg",
+          "email": "admin@mail.rmutt.ac.th",
+          "firstName": "phanupohong",
+          "lastName": "สินธุสุวรรณ",
+          "phone": "0864629699",
+          "studentId": "1164109061070",
+          "emailVerified": true,
+          "verificationToken": null,
+          "resetPasswordToken": null,
+          "resetPasswordExpires": null,
+          "image": "/userimage/soldier.png",
+          "password": "$2a$10$ICq9d/P7YTCJ/PR8xNMnMO.GcWA9n2E8/Wate7KgIC1C2ifAz6z5i",
+          "status": "InternSuccess",
+          "role": "ADMIN",
+          "createdAt": "2025-01-30T14:43:13.776Z",
+          "updatedAt": "2025-03-18T15:17:50.489Z",
+          "deletedAt": null
+      }
+  }
+]

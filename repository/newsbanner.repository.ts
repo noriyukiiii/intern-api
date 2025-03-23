@@ -163,20 +163,6 @@ class NewsBannerRepository {
       // เช็คสถานะ isActive ก่อนอัปเดต
       const isActive = banner.isActive;
 
-      // ถ้าต้องการเปิด banner และ active มากกว่า 5 ตัว ให้เกิดข้อผิดพลาด
-      if (!isActive) {
-        const activeCount = await db.banner.count({
-          where: {
-            isActive: true,
-          },
-        });
-
-        // ถ้าจำนวน active มากกว่า 5, ห้ามเพิ่ม
-        if (activeCount >= 5) {
-          throw new Error("Cannot activate more than 5 banners.");
-        }
-      }
-
       // อัปเดต isActive ของ Banner
       return await db.newsBanner.update({
         where: {

@@ -124,7 +124,6 @@ class CompanyRepository {
     companyId: string
   ): Promise<{ isFavorite: boolean }> {
     try {
-      console.log("Checking favorite status for:", { userId, companyId });
 
       const favorite = await db.favoriteCompanies.findFirst({
         where: {
@@ -774,6 +773,216 @@ class CompanyRepository {
     } catch (error) {
       console.error("Error updating company:", error);
       return null;
+    }
+  }
+  async userUpdateCompany(userId: string, companyId: string, Data: any) {
+    try {
+      // ตรวจสอบว่ามีข้อมูลบริษัทและผู้ใช้ที่ตรงกันหรือไม่ (Optional)
+      const companyExists = await db.company.findUnique({
+        where: { id: companyId },
+      });
+
+      const userExists = await db.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!companyExists || !userExists) {
+        throw new Error("Company or User not found");
+      }
+
+      // สร้างคำขอใหม่ใน CompanyRequest
+      const newCompanyRequest = await db.companyRequest.create({
+        data: {
+          companyId: companyId, // เชื่อมโยงกับ Company
+          userId: userId, // เชื่อมโยงกับ User
+          requestData: Data, // เก็บข้อมูล JSON ที่ได้รับ
+          status: "pending", // กำหนดสถานะเริ่มต้นเป็น pending
+        },
+      });
+
+      const appeal = await db.companyAppeal.create({
+        data: {
+          companyId: companyId, // ใช้ companyId ที่ส่งมา
+          companyName: companyExists.companyNameTh, // ใช้ชื่อบริษัท
+          status: "pending", // กำหนดสถานะเริ่มต้นเป็น pending
+          content: "แก้ไขข้อมูลบริษัท", // เนื้อหาของการอุทธรณ์
+          userId: userId, // ใช้ userId ที่ส่งมา
+        },
+      });
+
+      return { status: "success", message: "คำขอได้ทำการส่งไปแล้ว" }; // คืนค่าคำขอที่สร้างใหม่
+    } catch (error) {
+      console.error("Error updating company:", error);
+      throw new Error("Company or User not found");
+    }
+  }
+  async getEditRequest() {
+    try {
+      const companyRequests = await db.companyRequest.findMany({
+        where: {
+          status: "pending",
+        },
+        include: {
+          company: {
+            include: {
+              positions: {
+                include: {
+                  position_description: {
+                    include: {
+                      skills: {
+                        include: {
+                          tools: true, // รวมข้อมูล tools
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          user: true,
+        },
+      });
+
+      // ส่งกลับข้อมูลที่ดึงมาได้ หรือส่ง array ว่างๆ หากไม่มีข้อมูล
+      return companyRequests;
+    } catch (error) {
+      console.error("Error fetching company requests:", error);
+      // ส่ง array ว่างๆ เมื่อเกิดข้อผิดพลาด
+      throw new Error("ไม่มีคำขอแก้ไขบริษัท");
+    }
+  }
+  async confirmEditRequest(requestId: string, compId: string, userId: string) {
+    try {
+      // 1. ตรวจสอบว่ามีข้อมูลคำขอแก้ไขบริษัทหรือไม่
+      const companyRequest = await db.companyRequest.findUnique({
+        where: { id: requestId },
+      });
+
+      if (!companyRequest) {
+        throw new Error("Company request not found");
+      }
+
+      const requestDataObj = companyRequest.requestData;
+
+      if (
+        requestDataObj &&
+        typeof requestDataObj === "object" &&
+        !Array.isArray(requestDataObj)
+      ) {
+        // เช็คว่า requestDataObj เป็นอ็อบเจ็กต์และไม่เป็นอาร์เรย์
+        if (
+          requestDataObj.positions &&
+          Array.isArray(requestDataObj.positions)
+        ) {
+          // เช็คว่า positions เป็นอาร์เรย์
+          const updatedCompany = await db.company.update({
+            where: {
+              id: companyRequest.companyId, // ใช้ companyId จาก companyRequest
+            },
+            data: {
+              ...requestDataObj, // Spread ข้อมูลจาก requestData
+              positions: {
+                deleteMany: {}, // ลบ positions เก่าทั้งหมด
+                create: requestDataObj.positions.map((position: any) => ({
+                  name: position.name,
+                  position_description: {
+                    create: position.position_description.map((desc: any) => ({
+                      description: desc.description,
+                      skills: {
+                        create: desc.skills.map((skill: any) => ({
+                          name: skill.name,
+                          tools: {
+                            create: skill.tools.map((tool: any) => ({
+                              name: tool.name,
+                            })),
+                          },
+                        })),
+                      },
+                    })),
+                  },
+                })),
+              },
+            },
+          });
+          const approvedRequest = await db.companyRequest.update({
+            where: { id: requestId },
+            data: { status: "approved" },
+          });
+          // หา companyAppeal ที่ตรงกับ compId และ userId
+          const companyAppeal = await db.companyAppeal.findFirst({
+            where: {
+              companyId: compId,
+              userId: userId,
+              content: "แก้ไขข้อมูลบริษัท",
+            },
+            orderBy: {
+              createdAt: "desc", // จัดเรียงจากวันที่ล่าสุด
+            },
+            select: { id: true }, // เอาแค่ id มาใช้
+          });
+
+          if (companyAppeal) {
+            await db.companyAppeal.update({
+              where: { id: companyAppeal.id },
+              data: { status: "approved" },
+            });
+          } else {
+            console.log(
+              "No companyAppeal found for the given companyId and userId"
+            );
+          }
+
+          console.log("Company updated successfully", updatedCompany);
+        } else {
+          console.error(
+            "positions is not an array or doesn't exist in requestData"
+          );
+        }
+      } else {
+        console.error("Invalid requestData format");
+      }
+    } catch (error) {
+      console.error("Error confirming edit request:", error); // แสดงข้อผิดพลาดทั้งหมด
+      return null;
+    }
+  }
+  async rejectEditRequest(requestId: string, compId: string, userId: string) {
+    try {
+      // 1. ตรวจสอบว่ามีข้อมูลคำขอแก้ไขบริษัทหรือไม่
+      const companyRequest = await db.companyRequest.findUnique({
+        where: { id: requestId },
+      });
+
+      const rejectedRequest = await db.companyRequest.update({
+        where: { id: requestId },
+        data: { status: "rejected" },
+      });
+
+      const companyAppeal = await db.companyAppeal.findFirst({
+        where: {
+          companyId: compId,
+          userId: userId,
+          content: "แก้ไขข้อมูลบริษัท",
+        },
+        orderBy: {
+          createdAt: "desc", // จัดเรียงจากวันที่ล่าสุด
+        },
+        select: { id: true }, // เอาแค่ id มาใช้
+      });
+
+      if (companyAppeal) {
+        await db.companyAppeal.update({
+          where: { id: companyAppeal.id },
+          data: { status: "rejected" },
+        });
+      } else {
+        console.log(
+          "No companyAppeal found for the given companyId and userId"
+        );
+      }
+    } catch (error: any) {
+      throw new Error("Error rejecting edit request");
     }
   }
 }

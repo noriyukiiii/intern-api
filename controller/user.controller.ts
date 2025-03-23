@@ -4,11 +4,14 @@ import { userRepository } from "../repository/user.repository";
 class UserController {
   // ฟังก์ชันยืนยันอีเมล
   async verify(req: Request, res: Response) {
-    const token = req.query.token as string; // ดึง token จาก query string
+    const { token } = req.body;
 
     // ตรวจสอบว่า token มาหรือไม่
     if (!token) {
-      res.status(400).send("Token is required");
+      res.status(400).json({
+        success: false,
+        message: "Token is required",
+      });
       return;
     }
 
@@ -16,16 +19,29 @@ class UserController {
       // เรียกใช้ verifyUser จาก UserRepository เพื่อยืนยันอีเมล
       const result = await userRepository.verifyUser(token);
 
-      // ส่งผลลัพธ์กลับไป
-      res
-        .status(200)
-        .redirect(
-          "http://localhost:3000/verification/?message=Email%20verified%20successfully"
-        );
-      return;
+      if (result.success) {
+        // ถ้ายืนยันสำเร็จ
+        console.log("Email verified successfully, redirecting...");
+        res.status(200).json({
+          success: true,
+          message: "Email verified successfully",
+        });
+        return;
+      } else {
+        // หากไม่สามารถยืนยันได้ (เช่น token ไม่ถูกต้อง)
+        res.status(400).json({
+          success: false,
+          message: "Invalid token or token expired",
+        });
+        return;
+      }
     } catch (error: any) {
       // ส่งข้อผิดพลาดกลับไป
-      res.status(500).send(error.message);
+      console.error("Error during email verification:", error.message);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
       return;
     }
   }
@@ -55,6 +71,31 @@ class UserController {
       }
       await userRepository.updateUser(data);
       res.status(200).send("User updated successfully");
+      return;
+    } catch (error: any) {
+      res.status(500).send(error.message);
+      return;
+    }
+  }
+  async editFormOptions(req: Request, res: Response) {
+    try {
+      const options = await userRepository.editFormOptions();
+      res.status(200).json(options);
+      return;
+    } catch (error: any) {
+      res.status(500).send(error.message);
+      return;
+    }
+  }
+  async recommand(req: Request, res: Response) {
+    try {
+      const { userId } = req.query;
+      if (!userId) {
+        res.status(400).send("userId is required");
+        return;
+      }
+      const result = await userRepository.recommand(userId as string);
+      res.status(200).json(result);
       return;
     } catch (error: any) {
       res.status(500).send(error.message);

@@ -86,11 +86,14 @@ class AdminRepository {
 
       const userId = companyCreator.userId; // ดึง userId จาก companyCreator
 
-      // ค้นหา CompanyAppeal โดยใช้ companyId และ userId
       const companyAppeal = await db.companyAppeal.findFirst({
         where: {
           companyId: companyId,
           userId: userId,
+          content: "สร้างบริษัทใหม่", // กรองเฉพาะรายการที่มี content นี้
+        },
+        orderBy: {
+          id: "desc", // เรียงลำดับ id จากมากไปน้อย (ล่าสุดมาก่อน)
         },
       });
 
@@ -145,6 +148,10 @@ class AdminRepository {
         where: {
           companyId: companyId,
           userId: userId,
+          content: "สร้างบริษัทใหม่", // กรองเฉพาะรายการที่มี content นี้
+        },
+        orderBy: {
+          id: "desc", // เรียงลำดับ id จากมากไปน้อย (ล่าสุดมาก่อน)
         },
       });
 

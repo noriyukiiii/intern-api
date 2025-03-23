@@ -293,6 +293,86 @@ class CompanyController {
         .json({ success: false, message: "Failed to update company" });
     }
   }
+  async userUpdateCompany(req: Request, res: Response) {
+    try {
+      const { userId, companyId, Data } = req.body;
+      if (!userId || !companyId) {
+        res.status(400).json({
+          success: false,
+          message: "userId and companyId are required",
+        });
+        return;
+      }
+      const company = await companyRepository.userUpdateCompany(
+        userId,
+        companyId,
+        Data
+      );
+      res.status(201).json({
+        success: true,
+        message: "Company updated successfully",
+        company,
+      });
+    } catch (error: any) {
+      res
+        .status(500)
+        .json({ success: false, message: "Failed to update company" });
+      return;
+    }
+  }
+  async getEditRequest(req: Request, res: Response) {
+    try {
+      const company = await companyRepository.getEditRequest();
+
+      res.status(200).json(company);
+      return;
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+  }
+  async confirmEditRequest(req: Request, res: Response) {
+    try {
+      const { requestId, compId, userId } = req.body;
+      console.log("Received requestId in server:", requestId); // ตรวจสอบค่าที่รับมาจาก client
+      if (!requestId) {
+        res.status(400).json({ message: "Request ID is required" });
+        return;
+      }
+
+      const company = await companyRepository.confirmEditRequest(
+        requestId,
+        compId,
+        userId
+      );
+      res.status(200).json(company);
+      return;
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+  }
+  async rejectEditRequest(req: Request, res: Response) {
+    try {
+      const { requestId, compId, userId } = req.body;
+      console.log("Received requestId in server:", requestId); // ตรวจสอบค่าที่รับมาจาก client
+      if (!requestId) {
+        res.status(400).json({ message: "Request ID is required" });
+        return;
+      }
+
+      const company = await companyRepository.rejectEditRequest(
+        requestId,
+        compId,
+        userId
+      );
+      res.status(200).json(company);
+      return;
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+  }
 }
 
 export const companyController = new CompanyController();

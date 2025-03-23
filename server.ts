@@ -11,6 +11,7 @@ import companycreaterRoute from "./routes/companycreater.routes";
 import adminRoute from "./routes/admin.routes";
 import commentRoute from "./routes/comment.routes";
 import appealRoute from "./routes/appeal.routes";
+import { userRepository } from "./repository/user.repository";
 const app = express();
 const prisma = new PrismaClient();
 
@@ -228,7 +229,7 @@ app.post(
           });
         }
       }
-
+      await userRepository.changeStatus(userId);
       res.json({ success: true, message: "Favorite updated successfully" });
     } catch (error) {
       console.error("Error updating favorite status:", error);
