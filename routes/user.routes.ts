@@ -3,7 +3,7 @@ import { userController } from "../controller/user.controller";
 
 const router = Router();
 
-router.post("/verify", userController.verify);
+router.get("/verify", userController.verify);
 
 router.get("/edit-form-options", userController.editFormOptions);
 

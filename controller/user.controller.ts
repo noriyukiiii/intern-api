@@ -4,7 +4,7 @@ import { userRepository } from "../repository/user.repository";
 class UserController {
   // ฟังก์ชันยืนยันอีเมล
   async verify(req: Request, res: Response) {
-    const { token } = req.body;
+    const token = req.query.token as string; // ดึง token จาก query string
 
     // ตรวจสอบว่า token มาหรือไม่
     if (!token) {
