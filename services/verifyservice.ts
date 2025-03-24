@@ -13,6 +13,7 @@ export async function sendVerificationEmail(email: string, token: string, firstn
   // const verificationUrl = `${url}/user/verify?token=${token}`;
 //   const urlmain = `${process.env.NEXT_PUBLIC_BASE_URL}`;
   const verificationUrl = `https://intern-guide-web.vercel.app/verify?token=${token}`;
+//   const verificationUrl = `http://localhost:3000/verify?token=${token}`;
 
   const emailTemplate = `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 12px; background: linear-gradient(to bottom right, #ffffff, #f3f4f6); box-shadow: 4px 4px 10px rgba(0,0,0,0.1);">
