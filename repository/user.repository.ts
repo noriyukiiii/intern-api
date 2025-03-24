@@ -1,4 +1,5 @@
 import { db } from "../lib/prisma";
+import { sendVerificationEmail } from "../services/verifyservice";
 
 class UserRepository {
   async verifyUser(token: string) {
@@ -103,22 +104,22 @@ class UserRepository {
       const provinceData = await db.company.findMany({
         select: { province: true },
       });
-  
+
       const positionData = await db.positions.findMany({
         select: { name: true },
       });
-  
+
       // ใช้ Set เพื่อลบค่าซ้ำ และ filter เอา null ออก
       const province = Array.from(
         new Set(provinceData.map((item) => item.province))
       )
         .filter((province) => province !== null)
         .sort((a, b) => a.localeCompare(b, "th")); // เรียงลำดับตามตัวอักษรภาษาไทย
-  
+
       const position = Array.from(
         new Set(positionData.map((item) => item.name))
       ).filter((position) => position !== "Unknown");
-  
+
       return { province, position };
     } catch (error: any) {
       throw new Error("Error getting form options: " + error);
@@ -205,6 +206,19 @@ class UserRepository {
       return filteredCompanies;
     } catch (error: any) {
       throw new Error("Error recommending user: " + error.message);
+    }
+  }
+  async sendVerifyEmail(
+    email: string,
+    token: string,
+    firstname: string,
+    lastName: string
+  ) {
+    try {
+      await sendVerificationEmail(email, token, firstname, lastName);
+      return { success: true, message: "Email sent successfully" };
+    } catch (error: any) {
+      throw new Error("Error sending verification email: " + error.message);
     }
   }
 }

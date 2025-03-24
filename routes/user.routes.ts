@@ -11,6 +11,8 @@ router.get("/recommand", userController.recommand);
 
 router.patch("/update", userController.updateUser);
 
+router.post("/send-verify-email", userController.sendVerifyEmail);
+
 router.delete("/delete/:id", userController.delete);
 
 export default router;

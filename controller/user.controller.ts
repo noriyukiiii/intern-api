@@ -102,6 +102,22 @@ class UserController {
       return;
     }
   }
+  async sendVerifyEmail(req: Request, res: Response) {
+    try{
+      const { email , token, firstname ,lastname} = req.body;
+      if (!email || !token || !firstname || !lastname) {
+        res.status(400).send("Email, token, firstname and lastname are required");
+        return;
+      }
+      await userRepository.sendVerifyEmail(email, token, firstname, lastname);
+      res.status(200).send("Email sent successfully");
+      return;
+    }
+    catch (error: any) {
+      res.status(500).send(error.message);
+      return;
+    }
+  }
 }
 
 export const userController = new UserController();
