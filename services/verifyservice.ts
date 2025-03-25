@@ -14,10 +14,10 @@ export async function sendVerificationEmail(email: string, token: string, firstn
 //   const urlmain = `${process.env.NEXT_PUBLIC_BASE_URL}`;
   const verificationUrl = `https://intern-guide-web.vercel.app/verify?token=${token}`;
 //   const verificationUrl = `http://localhost:3000/verify?token=${token}`;
-
+// ${firstname} ${lastname}
   const emailTemplate = `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 12px; background: linear-gradient(to bottom right, #ffffff, #f3f4f6); box-shadow: 4px 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center; color: #ff6600; font-size: 24px;">👋 Hello, ${firstname} ${lastname}!</h2>
+    <h2 style="text-align: center; color: #ff6600; font-size: 24px;">👋 Hello,!</h2>
     <p style="font-size: 16px; color: #555; text-align: center;">
       Thank you for registering! If you submitted this request, please click the button below to complete the verification process.
     </p>
